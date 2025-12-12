@@ -57,6 +57,7 @@ function App() {
           onConnect={handleConnectWallet}
           isConnected={isConnected}
           walletAddress={account}
+          isLoading={isLoading}
         />
       )}
       {!showDashboard ? (
@@ -64,6 +65,7 @@ function App() {
           <Hero
             onConnect={handleConnectWallet}
             isConnected={isConnected}
+            isLoading={isLoading}
           />
           <HowItWorks />
           <CommunityOwnership />

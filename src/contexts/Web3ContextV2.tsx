@@ -146,18 +146,23 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
 
     try {
       if (!window.ethereum) {
-        throw new Error('MetaMask is not installed');
+        throw new Error('MetaMask is not installed. Please install MetaMask to continue.');
       }
 
-      const browserProvider = new BrowserProvider(window.ethereum);
-      const accounts = await browserProvider.send('eth_requestAccounts', []);
+      console.log('Requesting MetaMask accounts...');
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts'
+      });
 
-      if (accounts.length === 0) {
-        throw new Error('No accounts found');
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts found. Please unlock your MetaMask wallet.');
       }
+
+      console.log('Accounts received:', accounts[0]);
 
       await switchToScrollNetwork();
 
+      const browserProvider = new BrowserProvider(window.ethereum);
       const signer = await browserProvider.getSigner();
       const desertWifiContract = new Contract(
         DESERT_WIFI_NODES_V2_ADDRESS,
@@ -173,9 +178,24 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
       setUsdcContract(usdc);
       setUsdtContract(usdt);
       setAccount(accounts[0]);
+
+      console.log('Wallet connected successfully!');
     } catch (err: any) {
       console.error('Error connecting wallet:', err);
-      setError(err.message || 'Failed to connect wallet');
+
+      let errorMessage = 'Failed to connect wallet';
+      if (err.message) {
+        if (err.message.includes('User rejected')) {
+          errorMessage = 'Connection request rejected. Please try again.';
+        } else if (err.message.includes('MetaMask is not installed')) {
+          errorMessage = err.message;
+        } else {
+          errorMessage = err.message;
+        }
+      }
+
+      setError(errorMessage);
+      throw err;
     } finally {
       setIsLoading(false);
     }
