@@ -54,38 +54,108 @@ export default function Hero({ onConnect, isConnected, isLoading = false }: Hero
           <div className="relative h-96 lg:h-[500px]">
             <div className="absolute inset-0 flex items-center justify-center">
               <svg viewBox="0 0 400 400" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="100" cy="180" r="40" fill="#fb7185" opacity="0.9"/>
-                <ellipse cx="100" cy="230" rx="25" ry="40" fill="#fb7185" opacity="0.9"/>
-                <circle cx="95" cy="170" r="5" fill="#1f2937"/>
-                <circle cx="105" cy="170" r="5" fill="#1f2937"/>
-                <path d="M 95 185 Q 100 190 105 185" stroke="#1f2937" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                <rect x="85" y="240" width="10" height="25" fill="#fde047" rx="2"/>
-                <rect x="105" y="240" width="10" height="25" fill="#fde047" rx="2"/>
-                <rect x="80" y="265" width="40" height="8" fill="#1f2937" rx="4"/>
+                {/* Ghibli-style Desert Spirit with WiFi Antenna */}
+                <g className="animate-bounce-slow">
+                  {/* Body - round and fluffy like a soot sprite */}
+                  <ellipse cx="100" cy="200" rx="45" ry="50" fill="#5A4A3A" opacity="0.95"/>
+                  <ellipse cx="100" cy="200" rx="35" ry="40" fill="#6B5B4B" opacity="0.9"/>
 
-                <rect x="75" y="210" width="30" height="20" fill="#ffffff" rx="3"/>
-                <rect x="77" y="212" width="26" height="16" fill="#14b8a6" rx="2"/>
+                  {/* Cute antenna on head */}
+                  <line x1="100" y1="150" x2="100" y2="130" stroke="#14b8a6" strokeWidth="3" strokeLinecap="round"/>
+                  <circle cx="100" cy="125" r="6" fill="#14b8a6">
+                    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+                  </circle>
 
-                <circle cx="250" cy="200" r="35" fill="#fde047" opacity="0.9"/>
-                <ellipse cx="250" cy="245" rx="22" ry="35" fill="#fde047" opacity="0.9"/>
-                <circle cx="245" cy="192" r="4" fill="#1f2937"/>
-                <circle cx="255" cy="192" r="4" fill="#1f2937"/>
-                <path d="M 245 205 Q 250 208 255 205" stroke="#1f2937" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                <rect x="237" y="255" width="8" height="20" fill="#0d9488" rx="2"/>
-                <rect x="255" y="255" width="8" height="20" fill="#0d9488" rx="2"/>
-                <rect x="234" y="275" width="32" height="6" fill="#1f2937" rx="3"/>
+                  {/* Big sparkly eyes - very Ghibli style */}
+                  <ellipse cx="88" cy="195" rx="8" ry="12" fill="#1f2937"/>
+                  <ellipse cx="112" cy="195" rx="8" ry="12" fill="#1f2937"/>
+                  <circle cx="90" cy="192" r="3" fill="#ffffff"/>
+                  <circle cx="114" cy="192" r="3" fill="#ffffff"/>
 
-                <rect x="230" y="230" width="25" height="18" fill="#ffffff" rx="2"/>
-                <rect x="232" y="232" width="21" height="14" fill="#fb7185" rx="2"/>
+                  {/* Little smile */}
+                  <path d="M 92 210 Q 100 215 108 210" stroke="#1f2937" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
 
-                <circle cx="300" cy="120" r="30" fill="#14b8a6"/>
-                <path d="M 280 115 L 295 125 L 305 110" stroke="#ffffff" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                  {/* Tiny arms holding a signal */}
+                  <ellipse cx="65" cy="205" rx="12" ry="8" fill="#5A4A3A" opacity="0.9"/>
+                  <ellipse cx="135" cy="205" rx="12" ry="8" fill="#5A4A3A" opacity="0.9"/>
+                </g>
 
-                <circle cx="150" cy="80" r="25" fill="#fb7185"/>
-                <text x="150" y="90" fontSize="24" fill="#ffffff" textAnchor="middle" fontWeight="bold">$</text>
+                {/* Floating Spirit Creature - inspired by Kodama */}
+                <g className="animate-float">
+                  <ellipse cx="280" cy="160" rx="35" ry="40" fill="#F8E5CE" opacity="0.95"/>
 
-                <rect x="180" y="320" width="120" height="15" fill="#fde047" rx="4"/>
-                <path d="M 180 335 L 195 350 L 285 350 L 300 335 Z" fill="#ca8a04"/>
+                  {/* Cute little antenna ears */}
+                  <ellipse cx="265" cy="135" rx="8" ry="15" fill="#F8E5CE" opacity="0.9" transform="rotate(-20 265 135)"/>
+                  <ellipse cx="295" cy="135" rx="8" ry="15" fill="#F8E5CE" opacity="0.9" transform="rotate(20 295 135)"/>
+                  <circle cx="265" cy="125" r="4" fill="#fb7185"/>
+                  <circle cx="295" cy="125" r="4" fill="#fb7185"/>
+
+                  {/* Simple dot eyes */}
+                  <circle cx="272" cy="158" r="4" fill="#1f2937"/>
+                  <circle cx="288" cy="158" r="4" fill="#1f2937"/>
+                  <circle cx="273" cy="157" r="1.5" fill="#ffffff"/>
+                  <circle cx="289" cy="157" r="1.5" fill="#ffffff"/>
+
+                  {/* O-shaped mouth - very Ghibli */}
+                  <ellipse cx="280" cy="170" rx="4" ry="6" fill="#1f2937" opacity="0.8"/>
+
+                  {/* WiFi signal badge on chest */}
+                  <path d="M 270 180 Q 280 175 290 180 L 285 190 Q 280 188 275 190 Z" fill="#14b8a6" opacity="0.8"/>
+                  <path d="M 275 182 Q 280 180 285 182" stroke="#ffffff" strokeWidth="1.5" fill="none"/>
+                </g>
+
+                {/* Friendly Cactus Character */}
+                <g>
+                  <ellipse cx="200" cy="310" rx="30" ry="45" fill="#4D9F7B" opacity="0.95"/>
+
+                  {/* Arms */}
+                  <ellipse cx="170" cy="295" rx="15" ry="10" fill="#4D9F7B" opacity="0.9" transform="rotate(-30 170 295)"/>
+                  <ellipse cx="230" cy="295" rx="15" ry="10" fill="#4D9F7B" opacity="0.9" transform="rotate(30 230 295)"/>
+
+                  {/* Flower on top */}
+                  <circle cx="200" cy="260" r="8" fill="#fb7185"/>
+                  <circle cx="195" cy="255" r="5" fill="#fde047"/>
+                  <circle cx="205" cy="255" r="5" fill="#fde047"/>
+                  <circle cx="200" cy="250" r="5" fill="#fde047"/>
+
+                  {/* Happy eyes */}
+                  <path d="M 190 295 Q 188 298 186 295" stroke="#1f2937" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+                  <path d="M 214 295 Q 212 298 210 295" stroke="#1f2937" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+
+                  {/* Big smile */}
+                  <path d="M 188 310 Q 200 320 212 310" stroke="#1f2937" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+
+                  {/* Spines */}
+                  <line x1="185" y1="285" x2="180" y2="280" stroke="#2D5F4B" strokeWidth="2" strokeLinecap="round"/>
+                  <line x1="180" y1="300" x2="175" y2="300" stroke="#2D5F4B" strokeWidth="2" strokeLinecap="round"/>
+                  <line x1="215" y1="285" x2="220" y2="280" stroke="#2D5F4B" strokeWidth="2" strokeLinecap="round"/>
+                  <line x1="220" y1="300" x2="225" y2="300" stroke="#2D5F4B" strokeWidth="2" strokeLinecap="round"/>
+                </g>
+
+                {/* Magical WiFi Particles - like Ghibli sparkles */}
+                <circle cx="150" cy="100" r="3" fill="#fde047" opacity="0.8">
+                  <animate attributeName="cy" values="100;90;100" dur="3s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="320" cy="220" r="3" fill="#fb7185" opacity="0.8">
+                  <animate attributeName="cy" values="220;210;220" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="250" cy="80" r="2" fill="#14b8a6" opacity="0.8">
+                  <animate attributeName="cy" values="80;70;80" dur="3.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="60" cy="280" r="2" fill="#fde047" opacity="0.8">
+                  <animate attributeName="cx" values="60;70;60" dur="4s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="340" cy="300" r="2" fill="#fb7185" opacity="0.7">
+                  <animate attributeName="cx" values="340;330;340" dur="3s" repeatCount="indefinite"/>
+                </circle>
+
+                {/* Signal waves - soft and organic */}
+                <path d="M 100 125 Q 80 115 70 105" stroke="#14b8a6" strokeWidth="2" fill="none" opacity="0.4" strokeLinecap="round">
+                  <animate attributeName="opacity" values="0.4;0.1;0.4" dur="2s" repeatCount="indefinite"/>
+                </path>
+                <path d="M 100 125 Q 120 115 130 105" stroke="#14b8a6" strokeWidth="2" fill="none" opacity="0.4" strokeLinecap="round">
+                  <animate attributeName="opacity" values="0.1;0.4;0.1" dur="2s" repeatCount="indefinite"/>
+                </path>
               </svg>
             </div>
           </div>

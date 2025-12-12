@@ -23,11 +23,43 @@
     }
   }
 
+  @keyframes bounceSlow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    25% {
+      transform: translateY(-15px) translateX(5px);
+    }
+    50% {
+      transform: translateY(-8px) translateX(-5px);
+    }
+    75% {
+      transform: translateY(-12px) translateX(3px);
+    }
+  }
+
   .animate-fadeIn {
     animation: fadeIn 0.3s ease-out;
   }
 
   .animate-scaleIn {
     animation: scaleIn 0.3s ease-out;
+  }
+
+  .animate-bounce-slow {
+    animation: bounceSlow 3s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
   }
 }
