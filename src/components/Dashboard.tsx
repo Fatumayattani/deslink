@@ -14,6 +14,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ onDisconnect, isConnected }: DashboardProps) {
+  console.log('Dashboard component mounted/rendering');
   const { getUserPayments, getNetworkStats, account } = useWeb3V2();
   const [paymentHistory, setPaymentHistory] = useState<any[]>([]);
   const [networkStats, setNetworkStats] = useState({
