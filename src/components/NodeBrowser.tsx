@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Search, Wifi, MapPin, Star, Users, TrendingUp, TrendingDown, RefreshCw, SlidersHorizontal } from 'lucide-react';
-import { WifiNode } from '../lib/supabase';
+import { WifiNode } from '../lib/localStorage';
 import { searchNodes, NodeFilters, SortOption } from '../services/nodeService';
 
 interface NodeBrowserProps {

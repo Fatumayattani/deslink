@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Clock, DollarSign, Coins, MapPin } from 'lucide-react';
 import { useWeb3V2 } from '../contexts/Web3ContextV2';
 import { PaymentType, USDC_ADDRESS, USDT_ADDRESS } from '../contracts/desertWifiNodesV2Config';
-import { WifiNode } from '../lib/supabase';
+import { WifiNode } from '../lib/localStorage';
 import WifiConnectedModal from './WifiConnectedModal';
 
 interface PaymentModalV2Props {
