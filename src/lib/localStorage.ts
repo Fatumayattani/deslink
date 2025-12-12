@@ -58,23 +58,6 @@ function getMockNodes(): WifiNode[] {
       created_at: now,
       updated_at: now,
     },
-    {
-      id: '3',
-      node_id: 3,
-      owner_address: '0x8ba1f109551bD432803012645Ac136ddd64DBA72',
-      location: 'Parklands, Nairobi, Kenya',
-      price_per_hour_eth: 0.001,
-      price_per_hour_usd: 1.5,
-      reputation_score: 90,
-      total_connections: 1187,
-      is_active: true,
-      upvotes: 204,
-      downvotes: 25,
-      registered_at: now,
-      last_synced_at: now,
-      created_at: now,
-      updated_at: now,
-    },
   ];
 }
 
