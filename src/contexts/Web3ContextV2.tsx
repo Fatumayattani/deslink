@@ -210,7 +210,7 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
     setError(null);
   };
 
-  const makePaymentETH = async (_nodeId: number, duration: number, amount: string) => {
+  const makePaymentETH = async (nodeId: number, duration: number, amount: string) => {
     if (!contract) {
       throw new Error('Contract not initialized');
     }
@@ -219,7 +219,7 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
     setError(null);
 
     try {
-      const tx = await contract.makePaymentETH(1, duration, {
+      const tx = await contract.makePaymentETH(nodeId, duration, {
         value: parseEther(amount),
       });
       await tx.wait();
@@ -254,7 +254,7 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
   };
 
   const makePaymentStablecoin = async (
-    _nodeId: number,
+    nodeId: number,
     duration: number,
     amount: string,
     paymentType: PaymentType
@@ -268,7 +268,7 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
 
     try {
       const amountInUnits = parseUnits(amount, 6);
-      const tx = await contract.makePaymentStablecoin(1, duration, amountInUnits, paymentType);
+      const tx = await contract.makePaymentStablecoin(nodeId, duration, amountInUnits, paymentType);
       await tx.wait();
     } catch (err: any) {
       console.error('Error making stablecoin payment:', err);
