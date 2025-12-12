@@ -18,6 +18,7 @@ export interface WifiNode {
 
 const STORAGE_KEY = 'desert_wifi_nodes';
 const MOCK_NODES_KEY = 'desert_wifi_mock_initialized';
+const DATA_VERSION = '2.0';
 
 function getMockNodes(): WifiNode[] {
   const now = new Date().toISOString();
@@ -61,12 +62,15 @@ function getMockNodes(): WifiNode[] {
 }
 
 function initializeMockData() {
-  const isInitialized = localStorage.getItem(MOCK_NODES_KEY);
+  const storedVersion = localStorage.getItem(MOCK_NODES_KEY);
 
-  if (!isInitialized) {
+  if (storedVersion !== DATA_VERSION) {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(MOCK_NODES_KEY);
+
     const mockNodes = getMockNodes();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(mockNodes));
-    localStorage.setItem(MOCK_NODES_KEY, 'true');
+    localStorage.setItem(MOCK_NODES_KEY, DATA_VERSION);
   }
 }
 
