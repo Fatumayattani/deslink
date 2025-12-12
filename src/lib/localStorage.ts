@@ -58,6 +58,23 @@ function getMockNodes(): WifiNode[] {
       created_at: now,
       updated_at: now,
     },
+    {
+      id: '2',
+      node_id: 2,
+      owner_address: '0x8ba1f109551bD432803012645Ac136ddd64DBA72',
+      location: 'Westlands, Nairobi, Kenya',
+      price_per_hour_eth: 0.001,
+      price_per_hour_usd: 2.5,
+      reputation_score: 94,
+      total_connections: 1187,
+      is_active: true,
+      upvotes: 234,
+      downvotes: 15,
+      registered_at: now,
+      last_synced_at: now,
+      created_at: now,
+      updated_at: now,
+    },
   ];
 }
 
