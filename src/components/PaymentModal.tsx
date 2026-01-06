@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Clock, DollarSign, MapPin } from 'lucide-react';
 import { useWeb3V2 } from '../contexts/Web3ContextV2';
-import { WifiNode } from '../lib/supabase';
+import { WifiNode } from '../lib/localStorage';
 import WifiConnectedModal from './WifiConnectedModal';
 
 interface PaymentModalProps {
@@ -30,8 +30,13 @@ export default function PaymentModal({ isOpen, onClose, onPaymentSuccess, select
     e.preventDefault();
     setError('');
 
+    if (!selectedNode) {
+      setError('Please select a node first');
+      return;
+    }
+
     try {
-      await makePaymentETH(1, parseInt(duration), amount);
+      await makePaymentETH(selectedNode.node_id, parseInt(duration), amount);
       onPaymentSuccess();
       onClose();
       setShowSuccessModal(true);

@@ -1,12 +1,13 @@
-import { Wifi, Sun, Wallet } from 'lucide-react';
+import { Wifi, Sun, Wallet, Loader2 } from 'lucide-react';
 
 interface NavbarProps {
   onConnect: () => void;
   isConnected: boolean;
   walletAddress?: string | null;
+  isLoading?: boolean;
 }
 
-export default function Navbar({ onConnect, isConnected, walletAddress }: NavbarProps) {
+export default function Navbar({ onConnect, isConnected, walletAddress, isLoading = false }: NavbarProps) {
   const formatAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
@@ -28,9 +29,15 @@ export default function Navbar({ onConnect, isConnected, walletAddress }: Navbar
 
           <button
             onClick={onConnect}
-            className="flex items-center gap-2 bg-gradient-to-r from-coral-500 to-coral-600 hover:from-coral-600 hover:to-coral-700 text-white px-6 py-3 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+            disabled={isLoading}
+            className="flex items-center gap-2 bg-gradient-to-r from-coral-500 to-coral-600 hover:from-coral-600 hover:to-coral-700 text-white px-6 py-3 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            {isConnected && walletAddress ? (
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Connecting...</span>
+              </>
+            ) : isConnected && walletAddress ? (
               <>
                 <Wallet className="w-5 h-5" />
                 <span className="font-mono">{formatAddress(walletAddress)}</span>

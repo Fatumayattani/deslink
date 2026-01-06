@@ -1,4 +1,4 @@
-import { Github, Twitter, MessageCircle, Heart, Code } from 'lucide-react';
+import { Github, Twitter, MessageCircle, Code } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -70,11 +70,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+        <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm">
           <p className="text-gray-400 font-medium">© 2025 Deslink. Empowering communities worldwide.</p>
-          <p className="flex items-center gap-2 text-gray-400 font-medium">
-            Made with <Heart className="w-4 h-4 text-coral-500 fill-coral-500 animate-pulse" /> for the future
-          </p>
         </div>
       </div>
     </footer>

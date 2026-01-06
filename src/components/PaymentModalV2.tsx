@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Clock, DollarSign, Coins, MapPin } from 'lucide-react';
 import { useWeb3V2 } from '../contexts/Web3ContextV2';
 import { PaymentType, USDC_ADDRESS, USDT_ADDRESS } from '../contracts/desertWifiNodesV2Config';
-import { WifiNode } from '../lib/supabase';
+import { WifiNode } from '../lib/localStorage';
 import WifiConnectedModal from './WifiConnectedModal';
 
 interface PaymentModalV2Props {
@@ -37,6 +37,11 @@ export default function PaymentModalV2({ isOpen, onClose, onPaymentSuccess, sele
     e.preventDefault();
     setError('');
 
+    if (!selectedNode) {
+      setError('Please select a node first');
+      return;
+    }
+
     try {
       const parsedDuration = parseInt(duration);
 
@@ -46,7 +51,7 @@ export default function PaymentModalV2({ isOpen, onClose, onPaymentSuccess, sele
       }
 
       if (paymentMethod === 'ETH') {
-        await makePaymentETH(1, parsedDuration, amount);
+        await makePaymentETH(selectedNode.node_id, parsedDuration, amount);
       } else {
         if (step === 'payment') {
           setStep('approve');
@@ -56,7 +61,7 @@ export default function PaymentModalV2({ isOpen, onClose, onPaymentSuccess, sele
         }
 
         const paymentType = paymentMethod === 'USDC' ? PaymentType.USDC : PaymentType.USDT;
-        await makePaymentStablecoin(1, parsedDuration, amount, paymentType);
+        await makePaymentStablecoin(selectedNode.node_id, parsedDuration, amount, paymentType);
       }
 
       onPaymentSuccess();

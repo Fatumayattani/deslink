@@ -5,7 +5,7 @@ import { useWeb3V2 } from '../contexts/Web3ContextV2';
 import Footer from './Footer';
 import PaymentModal from './PaymentModal';
 import WalletAddressDisplay from './WalletAddressDisplay';
-import { WifiNode } from '../lib/supabase';
+import { WifiNode } from '../lib/localStorage';
 import { searchNodes, NodeFilters, SortOption } from '../services/nodeService';
 
 interface DashboardProps {
@@ -14,6 +14,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ onDisconnect, isConnected }: DashboardProps) {
+  console.log('Dashboard component mounted/rendering');
   const { getUserPayments, getNetworkStats, account } = useWeb3V2();
   const [paymentHistory, setPaymentHistory] = useState<any[]>([]);
   const [networkStats, setNetworkStats] = useState({
@@ -115,8 +116,7 @@ export default function Dashboard({ onDisconnect, isConnected }: DashboardProps)
   };
 
   const handleSelectNode = (node: WifiNode) => {
-    const nodeWithFixedId = { ...node, node_id: 1 };
-    setSelectedNode(nodeWithFixedId);
+    setSelectedNode(node);
     setIsPaymentModalOpen(true);
   };
 

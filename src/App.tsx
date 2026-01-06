@@ -14,25 +14,38 @@ function App() {
   const { isConnected, connectWallet, disconnectWallet, account, isLoading } = useWeb3V2();
 
   useEffect(() => {
-    if (isConnected && account && !showDashboard && !isLoading) {
-      setShowConfirmation(true);
+    console.log('Navigation useEffect triggered:', { isConnected, account: !!account, showDashboard, isLoading });
+
+    if (isConnected && account && !showDashboard) {
+      console.log('Setting up confirmation modal and auto-navigation timer');
+
+      setTimeout(() => {
+        setShowConfirmation(true);
+      }, 100);
 
       const autoNavigateTimer = setTimeout(() => {
+        console.log('Auto-navigating to dashboard');
         setShowConfirmation(false);
         setShowDashboard(true);
-      }, 2500);
+      }, 2600);
 
-      return () => clearTimeout(autoNavigateTimer);
+      return () => {
+        console.log('Cleaning up navigation timer');
+        clearTimeout(autoNavigateTimer);
+      };
     }
-  }, [isConnected, account, showDashboard, isLoading]);
+  }, [isConnected, account, showDashboard]);
 
   const handleConnectWallet = async () => {
     if (isConnected && account) {
+      console.log('Wallet already connected, navigating to dashboard');
       setShowDashboard(true);
       setShowConfirmation(false);
     } else {
       try {
+        console.log('Initiating wallet connection...');
         await connectWallet();
+        console.log('Wallet connection completed successfully');
       } catch (error) {
         console.error('Failed to connect wallet:', error);
       }
@@ -40,6 +53,7 @@ function App() {
   };
 
   const handleContinueToDashboard = () => {
+    console.log('Manual navigation to dashboard triggered');
     setShowConfirmation(false);
     setShowDashboard(true);
   };
@@ -50,6 +64,8 @@ function App() {
     setShowConfirmation(false);
   };
 
+  console.log('App render:', { showDashboard, showConfirmation, isConnected, hasAccount: !!account });
+
   return (
     <div className="min-h-screen bg-white">
       {!showDashboard && (
@@ -57,6 +73,7 @@ function App() {
           onConnect={handleConnectWallet}
           isConnected={isConnected}
           walletAddress={account}
+          isLoading={isLoading}
         />
       )}
       {!showDashboard ? (
@@ -64,16 +81,20 @@ function App() {
           <Hero
             onConnect={handleConnectWallet}
             isConnected={isConnected}
+            isLoading={isLoading}
           />
           <HowItWorks />
           <CommunityOwnership />
           <Footer />
         </>
       ) : (
-        <Dashboard
-          onDisconnect={handleDisconnect}
-          isConnected={isConnected}
-        />
+        <>
+          {console.log('Rendering Dashboard component')}
+          <Dashboard
+            onDisconnect={handleDisconnect}
+            isConnected={isConnected}
+          />
+        </>
       )}
 
       {showConfirmation && account && (

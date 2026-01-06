@@ -3,7 +3,10 @@ import { BrowserProvider, Contract, parseEther, parseUnits } from 'ethers';
 import {
   DESERT_WIFI_NODES_V2_ABI,
   DESERT_WIFI_NODES_V2_ADDRESS,
-  SCROLL_SEPOLIA_CHAIN_ID,
+  CURRENT_CHAIN_ID,
+  CURRENT_NETWORK_NAME,
+  CURRENT_RPC_URL,
+  CURRENT_BLOCK_EXPLORER,
   PaymentType,
   ProposalType,
   ERC20_ABI,
@@ -102,7 +105,7 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
   const switchToScrollNetwork = async () => {
     if (!window.ethereum) return;
 
-    const chainIdHex = `0x${SCROLL_SEPOLIA_CHAIN_ID.toString(16)}`;
+    const chainIdHex = `0x${CURRENT_CHAIN_ID.toString(16)}`;
 
     try {
       await window.ethereum.request({
@@ -117,14 +120,14 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
             params: [
               {
                 chainId: chainIdHex,
-                chainName: 'Scroll Sepolia Testnet',
+                chainName: CURRENT_NETWORK_NAME,
                 nativeCurrency: {
                   name: 'ETH',
                   symbol: 'ETH',
                   decimals: 18,
                 },
-                rpcUrls: ['https://sepolia-rpc.scroll.io'],
-                blockExplorerUrls: ['https://sepolia.scrollscan.com/'],
+                rpcUrls: [CURRENT_RPC_URL],
+                blockExplorerUrls: [CURRENT_BLOCK_EXPLORER],
               },
             ],
           });
@@ -143,18 +146,23 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
 
     try {
       if (!window.ethereum) {
-        throw new Error('MetaMask is not installed');
+        throw new Error('MetaMask is not installed. Please install MetaMask to continue.');
       }
 
-      const browserProvider = new BrowserProvider(window.ethereum);
-      const accounts = await browserProvider.send('eth_requestAccounts', []);
+      console.log('Requesting MetaMask accounts...');
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts'
+      });
 
-      if (accounts.length === 0) {
-        throw new Error('No accounts found');
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts found. Please unlock your MetaMask wallet.');
       }
+
+      console.log('Accounts received:', accounts[0]);
 
       await switchToScrollNetwork();
 
+      const browserProvider = new BrowserProvider(window.ethereum);
       const signer = await browserProvider.getSigner();
       const desertWifiContract = new Contract(
         DESERT_WIFI_NODES_V2_ADDRESS,
@@ -170,9 +178,24 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
       setUsdcContract(usdc);
       setUsdtContract(usdt);
       setAccount(accounts[0]);
+
+      console.log('Wallet connected successfully!');
     } catch (err: any) {
       console.error('Error connecting wallet:', err);
-      setError(err.message || 'Failed to connect wallet');
+
+      let errorMessage = 'Failed to connect wallet';
+      if (err.message) {
+        if (err.message.includes('User rejected')) {
+          errorMessage = 'Connection request rejected. Please try again.';
+        } else if (err.message.includes('MetaMask is not installed')) {
+          errorMessage = err.message;
+        } else {
+          errorMessage = err.message;
+        }
+      }
+
+      setError(errorMessage);
+      throw err;
     } finally {
       setIsLoading(false);
     }
@@ -187,7 +210,7 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
     setError(null);
   };
 
-  const makePaymentETH = async (_nodeId: number, duration: number, amount: string) => {
+  const makePaymentETH = async (nodeId: number, duration: number, amount: string) => {
     if (!contract) {
       throw new Error('Contract not initialized');
     }
@@ -196,7 +219,7 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
     setError(null);
 
     try {
-      const tx = await contract.makePaymentETH(1, duration, {
+      const tx = await contract.makePaymentETH(nodeId, duration, {
         value: parseEther(amount),
       });
       await tx.wait();
@@ -231,7 +254,7 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
   };
 
   const makePaymentStablecoin = async (
-    _nodeId: number,
+    nodeId: number,
     duration: number,
     amount: string,
     paymentType: PaymentType
@@ -245,7 +268,7 @@ export function Web3ProviderV2({ children }: { children: ReactNode }) {
 
     try {
       const amountInUnits = parseUnits(amount, 6);
-      const tx = await contract.makePaymentStablecoin(1, duration, amountInUnits, paymentType);
+      const tx = await contract.makePaymentStablecoin(nodeId, duration, amountInUnits, paymentType);
       await tx.wait();
     } catch (err: any) {
       console.error('Error making stablecoin payment:', err);

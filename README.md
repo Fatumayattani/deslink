@@ -2,14 +2,25 @@
 
 A decentralized, community-owned WiFi network platform powered by solar energy and Scroll blockchain payments. This project aims to bridge the digital gap by providing affordable, reliable internet access to underserved communities.
 
-![Deslink](public/desertw.png)
 
 ## Overview
 
-Deslink is a web application that enables communities to establish and manage their own solar-powered WiFi mesh networks. Users can connect to local nodes, make affordable payments via cryptocurrency on the Scroll network, and track their usage through an intuitive dashboard.
+Deslink is a web application that enables communities to establish and manage their own solar-powered WiFi mesh networks. Users can browse available WiFi nodes in a centralized hub, make payments via cryptocurrency on the Scroll network, and track their usage through an intuitive dashboard. All payments are routed to a central node (#1) for simplified network management.
 
 ## Features
 
+### V2 Features (Current)
+- **Enhanced Smart Contract (V2)**: Multi-payment support with ETH, USDC, and USDT
+- **Supabase Integration**: Real-time node database with filtering and search
+- **Advanced Node Browser**: Search, filter, and sort WiFi nodes by price, reputation, and location
+- **Multiple Payment Methods**: Support for ETH, USDC, and USDT payments
+- **Reputation System**: Community-driven node ratings with upvote/downvote functionality
+- **Governance System**: Token-weighted voting for network decisions
+- **Node Statistics**: Detailed metrics including connections, earnings, and uptime
+- **Connection Confirmation**: Smooth user experience with connection modals
+- **Centralized Payment Hub**: All payments route to Node #1 for streamlined management
+
+### Core Features
 - **Smart Contract Integration**: Fully functional Solidity smart contract on Scroll network
 - **Wallet Integration**: Connect via MetaMask or other Web3 wallets
 - **Real Payments**: Make actual blockchain payments for WiFi access
@@ -27,184 +38,118 @@ Deslink is a web application that enables communities to establish and manage th
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React
 - **Build Tool**: Vite
-- **Blockchain**: Scroll Network (L2 Ethereum)
+- **Database**: Supabase (PostgreSQL)
+- **Blockchain**: Scroll Sepolia Testnet (L2 Ethereum)
 - **Smart Contract**: Solidity 0.8.20+
 - **Web3 Library**: Ethers.js v6
 - **Wallet**: MetaMask / Web3 Compatible
 
-## Project Architecture
-
-### Application Structure
-
-```
-deslink/
-├── contracts/
-│   └── DesertWifiNodes.sol      # Main smart contract
-├── src/
-│   ├── components/
-│   │   ├── Navbar.tsx           # Navigation with wallet connect
-│   │   ├── Hero.tsx             # Landing page hero section
-│   │   ├── HowItWorks.tsx       # 3-step process explanation
-│   │   ├── CommunityOwnership.tsx # Feature showcase
-│   │   ├── Dashboard.tsx        # User dashboard with blockchain data
-│   │   ├── PaymentModal.tsx     # Payment interface for smart contract
-│   │   └── Footer.tsx           # Site footer
-│   ├── contexts/
-│   │   └── Web3Context.tsx      # Web3 provider and hooks
-│   ├── contracts/
-│   │   └── desertWifiNodesConfig.ts # Contract ABI and configuration
-│   ├── App.tsx                  # Main app component & routing
-│   ├── main.tsx                 # Application entry point
-│   └── index.css                # Global styles & Tailwind
-├── public/                      # Static assets
-├── DEPLOYMENT.md                # Smart contract deployment guide
-└── dist/                        # Production build
-```
 
 ### Component Architecture
 
 ```
-App (Root)
+App (Root) - wrapped in Web3ProviderV2
 ├── State Management
 │   ├── showDashboard (boolean)
-│   └── isWalletConnected (boolean)
+│   ├── showConfirmation (boolean)
+│   └── isWalletConnected (from context)
 │
 ├── Landing Page View
-│   ├── Navbar
+│   ├── Navbar (wallet connection)
 │   ├── Hero
 │   ├── HowItWorks
 │   ├── CommunityOwnership
 │   └── Footer
 │
+├── Connection Confirmation Modal
+│   └── Shows wallet address & auto-navigates to dashboard
+│
 └── Dashboard View (Authenticated)
-    ├── Header (with disconnect)
-    ├── Stats Cards
-    ├── Payment History Table
+    ├── Header (with disconnect & wallet display)
+    ├── Tab Navigation (Nodes / History)
+    ├── Node Browser Tab
+    │   ├── Search & Filter Controls
+    │   ├── Sort Options
+    │   └── Node Cards (with connect button)
+    ├── Payment History Tab
+    │   └── Transaction History Table
+    ├── Payment Modal (V2)
+    │   ├── ETH Payment Option
+    │   ├── USDC Payment Option
+    │   └── USDT Payment Option
     └── Footer
 ```
 
-## User Flow Diagram
+## User Flow
+
+### Connection & Browsing Flow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      Landing Page                            │
-│  ┌────────────┐  ┌────────────┐  ┌──────────────────────┐  │
-│  │   Hero     │  │ How It     │  │  Community           │  │
-│  │  Section   │  │  Works     │  │  Ownership           │  │
-│  └────────────┘  └────────────┘  └──────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            │ Click "Connect Wallet"
-                            ▼
-                  ┌──────────────────┐
-                  │  MetaMask Popup  │
-                  │  Authorization   │
-                  └──────────────────┘
-                            │
-                ┌───────────┴────────────┐
-                │                        │
-         User Approves            User Rejects
-                │                        │
-                ▼                        ▼
-    ┌──────────────────────┐    Stay on Landing Page
-    │   User Dashboard     │
-    │                      │
-    │  ┌────────────────┐ │
-    │  │ Network Stats  │ │
-    │  ├────────────────┤ │
-    │  │ Payment        │ │
-    │  │ History        │ │
-    │  ├────────────────┤ │
-    │  │ Add Funds CTA  │ │
-    │  └────────────────┘ │
-    └──────────────────────┘
-                │
-                │ Click "Disconnect"
-                ▼
-         Return to Landing Page
+Landing Page → Connect Wallet → MetaMask Authorization
+                                        ↓
+                              Connection Confirmation
+                                        ↓
+                                    Dashboard
+                                        ↓
+                            Browse Available Nodes
+                                        ↓
+                          Filter by Price/Reputation
+                                        ↓
+                            Select Node to Connect
+                                        ↓
+                              Payment Modal Opens
+                                        ↓
+                    Choose Payment Method (ETH/USDC/USDT)
+                                        ↓
+                              Confirm Transaction
+                                        ↓
+                           Payment Routes to Node #1
+                                        ↓
+                            Success Modal Displays
+                                        ↓
+                              Connected to WiFi!
 ```
+
 
 ## Payment Flow (Scroll Network)
 
 ```
 ┌──────────────┐
 │   User       │
-│   Wallet     │
+│   Browses    │
+│   Nodes      │
 └──────┬───────┘
-       │ 1. Connect Wallet
+       │ 1. Select Node (Any Node)
        ▼
 ┌──────────────────┐
-│  MetaMask/Web3   │
-│   Provider       │
+│  Payment Modal   │
+│  ETH/USDC/USDT   │
 └──────┬───────────┘
-       │ 2. Request Access
+       │ 2. Choose Payment Method
        ▼
 ┌──────────────────────────────────┐
 │   Scroll Network (L2)            │
 │                                  │
 │  ┌────────────────────────────┐ │
-│  │  Smart Contract            │ │
-│  │  - Payment Processing      │ │
-│  │  - Node Registration       │ │
-│  │  - Usage Tracking          │ │
+│  │  Smart Contract V2         │ │
+│  │  nodeId = 1 (hardcoded)    │ │
+│  │  - Multi-currency support  │ │
+│  │  - Payment processing      │ │
+│  │  - Reputation tracking     │ │
 │  └────────────────────────────┘ │
 └──────────────────────────────────┘
        │ 3. Transaction Confirmed
        ▼
 ┌──────────────────┐
-│   Dashboard      │
-│   - Update Stats │
-│   - Show History │
+│   Success Modal  │
+│   WiFi Connected │
 └──────────────────┘
-```
-
-## Data Flow Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Frontend (React)                         │
-│                                                              │
-│  ┌──────────────┐         ┌──────────────────────────────┐ │
-│  │   App.tsx    │────────▶│  Component State             │ │
-│  │              │         │  - isWalletConnected         │ │
-│  │              │         │  - showDashboard             │ │
-│  └──────┬───────┘         └──────────────────────────────┘ │
-│         │                                                    │
-│  ┌──────┴───────────────────────────────────────────────┐  │
-│  │              Component Layer                          │  │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────────────┐   │  │
-│  │  │ Navbar   │  │   Hero   │  │   Dashboard      │   │  │
-│  │  └──────────┘  └──────────┘  └──────────────────┘   │  │
-│  └───────────────────────────────────────────────────────┘  │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │              Web3Context Provider                     │  │
-│  │  - Wallet connection management                       │  │
-│  │  - Contract interaction methods                       │  │
-│  │  - Network statistics fetching                        │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            │ Ethers.js / Web3 Provider
-                            ▼
-                  ┌──────────────────┐
-                  │   MetaMask API   │
-                  │  (Web3 Wallet)   │
-                  └──────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Scroll Network (Blockchain)                 │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  DesertWifiNodes Smart Contract                      │  │
-│  │  - Node registration and management                  │  │
-│  │  - Payment processing                                │  │
-│  │  - Earnings distribution                             │  │
-│  │  - Network statistics tracking                       │  │
-│  │  - Access control and security                       │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+       │ 4. Update Dashboard
+       ▼
+┌──────────────────┐
+│  Payment History │
+│  Updated Stats   │
+└──────────────────┘
 ```
 
 ## Getting Started
@@ -213,14 +158,15 @@ App (Root)
 
 - Node.js 18+
 - npm or yarn
-- MetaMask browser extension (for wallet functionality)
-- ETH on Scroll Sepolia testnet (get from [Scroll Faucet](https://sepolia.scroll.io/faucet))
+- MetaMask browser extension
+- ETH on Scroll Sepolia testnet ([Get testnet ETH](https://sepolia.scroll.io/faucet))
+- Supabase account (free tier available)
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/Fatumayattani/deslink.git
 cd deslink
 ```
 
@@ -229,31 +175,43 @@ cd deslink
 npm install
 ```
 
-3. Deploy the Smart Contract:
-   - Follow the detailed instructions in [DEPLOYMENT.md](./DEPLOYMENT.md)
-   - Deploy `contracts/DesertWifiNodes.sol` to Scroll Sepolia or Scroll Mainnet
-   - Copy the deployed contract address
+3. Set up Supabase:
+   - Create a new Supabase project
+   - Run the migration in `supabase/migrations/`
+   - Copy your Supabase URL and anon key
 
-4. Set up environment variables:
+4. Configure environment variables:
 ```bash
-# Copy the example file
-cp .env.example .env
-
-# Edit .env and add your contract address
-VITE_CONTRACT_ADDRESS=0xYourContractAddressHere
+# Create .env file
+VITE_CONTRACT_ADDRESS=0xxxxxx
+VITE_NETWORK_CHAIN_ID=534351
+VITE_NETWORK_NAME=Scroll Sepolia
+VITE_USDC_ADDRESS=0xxxxxxx
+VITE_USDT_ADDRESS=0xxxx
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-5. Start the development server:
+5. Deploy the Smart Contract:
+   - Follow instructions in [DEPLOYMENT.md](./DEPLOYMENT.md)
+   - Deploy `contracts/DesertWifiNodesV2.sol` to Scroll Sepolia
+   - Update contract address in `src/contracts/desertWifiNodesV2Config.ts`
+
+6. Ensure Node #1 exists:
+   - Register at least one node with nodeId = 1 on the blockchain
+   - All payments will be routed to this node
+
+7. Start the development server:
 ```bash
 npm run dev
 ```
 
-6. Open your browser and navigate to `http://localhost:5173`
+8. Open browser at `http://localhost:5173`
 
-7. Connect your MetaMask wallet
-   - Ensure you're on the Scroll network (Sepolia testnet or mainnet)
-   - Click "Connect Wallet" in the application
-   - Approve the connection in MetaMask
+9. Connect MetaMask:
+   - Switch to Scroll Sepolia network
+   - Click "Connect Wallet"
+   - Approve the connection
 
 ### Build for Production
 
@@ -261,127 +219,9 @@ npm run dev
 npm run build
 ```
 
-The production-ready files will be in the `dist/` directory.
+Production files will be in the `dist/` directory.
 
-### Preview Production Build
-
-```bash
-npm run preview
-```
-
-## Features in Detail
-
-### 1. Smart Contract
-The Deslink smart contract provides:
-- **Node Registration**: On-chain registration of WiFi nodes with location and pricing
-- **Payment Processing**: Secure payment handling with automatic fund distribution
-- **Earnings Management**: Node operators can withdraw earnings anytime
-- **Network Statistics**: Real-time tracking of nodes, users, and transaction volume
-- **Access Control**: Only node owners can manage their nodes
-
-### 2. Wallet Connection
-Users connect their Web3 wallet (MetaMask) to access the platform. The app automatically switches to the Scroll network and establishes a connection to the deployed smart contract.
-
-### 3. Dashboard
-After connecting, users see real-time data from the blockchain:
-- **Active Nodes**: Number of operational WiFi nodes on the network
-- **Connected Users**: Total unique users who have made payments
-- **Total Volume**: Total transaction volume in ETH processed through the contract
-- **Network Uptime**: Network reliability metrics
-
-### 4. Payment System
-Users can make payments through an intuitive modal:
-- Select a node by ID
-- Choose duration (1, 6, 12, or 24 hours)
-- Enter payment amount in ETH
-- Transaction is processed on-chain with MetaMask confirmation
-
-### 5. Payment History
-Dashboard displays user's on-chain transaction history:
-- Transaction date from blockchain timestamp
-- Node ID that received the payment
-- Payment amount in ETH
-- All transactions are verified on-chain
-
-### 6. Landing Page
-Educates visitors about:
-- How the decentralized system works (3-step process)
-- Community ownership model
-- Solar-powered infrastructure
-- Blockchain security and privacy features
-
-## Smart Contract Functions
-
-### For Users
-- `makePayment(nodeId, duration)` - Pay for WiFi access time
-- `getUserPayments(address)` - View your payment history
-- `getNetworkStats()` - Get real-time network statistics
-
-### For Node Operators
-- `registerNode(location, pricePerHour)` - Register a new WiFi node
-- `updateNodePrice(nodeId, newPrice)` - Update hourly pricing
-- `withdrawEarnings(nodeId)` - Withdraw accumulated earnings
-- `deactivateNode(nodeId)` / `reactivateNode(nodeId)` - Manage node status
-
-### View Functions
-- `getNode(nodeId)` - Get detailed node information
-- `getUserNodes(address)` - List nodes owned by an address
-- `getNodePayments(nodeId)` - View payments received by a node
-- `calculateUptime(nodeId)` - Calculate node uptime percentage
-
-## Future Enhancements
-
-### Smart Contract Upgrades
-- Staking mechanism for node operators
-- Governance token for community decisions
-- Multi-tier pricing models
-- Subscription-based payments
-- Referral rewards system
-
-### Additional Features
-- Mobile app (React Native)
-- Enhanced node operator portal with analytics
-- Advanced dashboard with charts and graphs
-- Multi-language support
-- Geographic node mapping with real-time availability
-- Bandwidth monitoring and QoS tracking
-- Integration with additional L2 networks
-- NFT-based node ownership certificates
-
-## Network Architecture
-
-### Mesh Network Topology
-
-```
-        ☀️ Solar Panel
-           │
-      ┌────┴────┐
-      │  Node A │◄──────┐
-      └────┬────┘       │
-           │            │
-     ┌─────┼─────┐      │
-     │     │     │      │
-┌────▼──┐ ┌▼────┐ ┌────▼──┐
-│Node B │ │Node C│ │Node D │
-└───────┘ └──────┘ └───────┘
-    │        │         │
-    └────────┼─────────┘
-             │
-        ┌────▼────┐
-        │  Users  │
-        └─────────┘
-```
-
-Each node:
-- Runs on solar power
-- Connects to multiple other nodes (mesh)
-- Serves local users
-- Processes Scroll payments
-- Reports stats to network
-
-## Development
-
-### Available Scripts
+### Development Scripts
 
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
@@ -389,26 +229,38 @@ Each node:
 - `npm run lint` - Run ESLint
 - `npm run typecheck` - Run TypeScript type checking
 
-### Code Structure
+## Payment Methods
 
-The application follows a component-based architecture:
+### ETH Payments
+- Native Scroll network currency
+- Single-step transaction
+- Instant confirmation
+- Gas fees included
 
-1. **App.tsx**: Main application logic and routing
-2. **Components**: Reusable UI components
-3. **Hooks**: Custom React hooks (future)
-4. **Utils**: Helper functions and utilities (future)
-5. **Types**: TypeScript type definitions (future)
+### USDC/USDT Payments
+- Stablecoin payments for price stability
+- Two-step process:
+  1. Approve token spending
+  2. Complete payment transaction
+- USD-denominated pricing
+- Lower volatility
 
-### Styling
+## Node Search & Filtering
 
-Tailwind CSS utility classes are used throughout for consistent styling:
-- **Teal**: Primary color (network/tech theme)
-- **Coral**: Secondary color (warmth/community)
-- **Sunny Yellow**: Accent (solar energy)
+Users can find the perfect node using:
+
+### Search
+- Search by location name
+- Real-time search updates
+
+### Filters
+- **Active Only**: Show only operational nodes
+- **Minimum Reputation**: Filter by quality score (50+, 70+, 85+)
+
 
 ## Contributing
 
-Contributions are welcome! Please follow these guidelines:
+Contributions welcome! Please:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -416,27 +268,26 @@ Contributions are welcome! Please follow these guidelines:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## Security
-
-- All wallet connections use standard Web3 providers
-- No private keys are stored or transmitted
-- Row Level Security (RLS) enabled on database (when integrated)
-- HTTPS required for production deployments
-
 ## License
 
 This project is open source and available under the MIT License.
 
 ## Support
 
-For issues, questions, or contributions, please open an issue on the GitHub repository.
+For issues, questions, or contributions:
+- Open an issue on GitHub
+- Check [V2_FEATURES.md](./V2_FEATURES.md) for feature details
+- Review [DEPLOYMENT.md](./DEPLOYMENT.md) for deployment help
 
 ## Acknowledgments
 
 - Built with React and Vite
-- Powered by Scroll Network for affordable transactions
+- Powered by Scroll Network for affordable L2 transactions
+- Web3 Developer Clubs
+- Supabase for real-time database
+- Ethers.js for Web3 integration
+- OpenZeppelin for secure smart contracts
 - Inspired by community-driven connectivity initiatives
-- Solar energy advocacy for sustainable technology
 
 ---
 
